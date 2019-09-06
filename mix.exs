@@ -9,6 +9,7 @@ defmodule Pelemay.MixProject do
       compilers: [:elixir_make | Mix.compilers()],
       make_targets: ["all"],
       make_clean: ["clean"],
+      make_env: make_env(),
       start_permanent: Mix.env() == :prod,
       description: description(),
       package: package(),
@@ -52,5 +53,18 @@ defmodule Pelemay.MixProject do
       licenses: ["Apache 2.0"],
       links: %{"GitHub" => "https://github.com/zeam-vm/pelemay"}
     ]
+  end
+
+  defp make_env() do
+    case System.get_env("ERL_EI_INCLUDE_DIR") do
+      nil ->
+        %{
+          "ERL_EI_INCLUDE_DIR" => "#{:code.root_dir()}/usr/include",
+          "ERL_EI_LIBDIR" => "#{:code.root_dir()}/usr/lib"
+        }
+
+      _ ->
+        %{}
+    end
   end
 end
